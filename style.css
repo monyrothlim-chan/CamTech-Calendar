@@ -79,7 +79,7 @@ body.dark .subtitle {
   color: #9ca3af;
 }
 
-.ios-notice {
+.ios-notice, .android-notice {
   background: rgba(79, 70, 229, 0.1);
   border-left: 4px solid #4f46e5;
   padding: 0.8rem;
@@ -89,18 +89,75 @@ body.dark .subtitle {
   font-size: 0.85rem;
 }
 
-body.dark .ios-notice {
+body.dark .ios-notice, body.dark .android-notice {
   background: rgba(79, 70, 229, 0.15);
   border-left-color: #6366f1;
 }
 
-.ios-notice p {
-  margin: 0;
+.ios-notice p, .android-notice p {
+  margin: 0.3rem 0;
   color: #4f46e5;
 }
 
-body.dark .ios-notice p {
+body.dark .ios-notice p, body.dark .android-notice p {
   color: #a5b4fc;
+}
+
+.instructions {
+  margin-top: 2rem;
+  padding: 1.2rem;
+  background: rgba(79, 70, 229, 0.05);
+  border-radius: 12px;
+  text-align: left;
+}
+
+body.dark .instructions {
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.instructions h3 {
+  color: #4f46e5;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+body.dark .instructions h3 {
+  color: #a5b4fc;
+}
+
+.instruction-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.step-number {
+  background: #4f46e5;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.step p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+body.dark .step p {
+  color: #d1d5db;
 }
 
 .calendar-section {
@@ -182,9 +239,13 @@ body.dark .calendar-btn {
     font-size: 0.85rem;
   }
   
-  .ios-notice {
+  .ios-notice, .android-notice {
     font-size: 0.8rem;
     padding: 0.6rem;
+  }
+  
+  .instructions {
+    padding: 1rem;
   }
 }
 
