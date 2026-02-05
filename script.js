@@ -49,36 +49,91 @@ function detectIOS() {
   }
 }
 
+// Convert Google Calendar web URL to app-specific URL
+function convertToGoogleCalendarAppUrl(webUrl) {
+  // Extract calendar ID from the URL
+  const match = webUrl.match(/cid=([^&]+)/);
+  if (match && match[1]) {
+    const calendarId = encodeURIComponent(match[1]);
+    return `googlecalendar://calendar/embed?src=${calendarId}`;
+  }
+  return 'googlecalendar://';
+}
+
 // Smart calendar opener for iOS/Android
 function openCalendarSmart(link) {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
   
   if (isIOS) {
-    // iOS: Try to open Google Calendar app first
-    const googleCalendarScheme = 'googlecalendar://';
-    const appleCalendarScheme = 'calshow://';
+    // For iOS, try to open Google Calendar app with the specific calendar
+    const appUrl = convertToGoogleCalendarAppUrl(link);
     
-    // Try Google Calendar app first
-    window.location = googleCalendarScheme;
+    // Try to open Google Calendar app
+    window.location = appUrl;
     
-    // Fallback timers
+    // Set a timeout to check if the app opened
     setTimeout(() => {
-      // If still on page after 300ms, try Apple Calendar
-      if (!document.hidden) {
-        window.location = appleCalendarScheme;
-      }
-    }, 300);
-    
-    setTimeout(() => {
-      // If still on page after 800ms, open web calendar
+      // If we're still on the page after 500ms, the app didn't open
+      // So open the web version instead
       if (!document.hidden) {
         window.open(link, '_blank');
       }
-    }, 800);
+    }, 500);
+    
   } else {
-    // Android/Desktop: Direct link (will open Google Calendar app if installed)
+    // For Android/Desktop - direct link should work
     window.open(link, '_blank');
   }
+}
+
+// Alternative method using iframe for better iOS detection
+function openCalendarSmartAlt(link) {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
+  if (isIOS) {
+    // Method 1: Try to open Google Calendar app directly
+    const appUrl = 'googlecalendar://';
+    
+    // Create hidden iframe to try opening the app
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = appUrl;
+    document.body.appendChild(iframe);
+    
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+      
+      // Method 2: If app not installed, use universal link
+      setTimeout(() => {
+        // Google Calendar universal link that should prompt to open in app
+        window.open('https://calendar.google.com/calendar/r', '_blank');
+        
+        // Fallback to original link after another delay
+        setTimeout(() => {
+          window.open(link, '_blank');
+        }, 1000);
+      }, 300);
+    }, 100);
+  } else {
+    // Android/Desktop
+    window.open(link, '_blank');
+  }
+}
+
+// Simple method for iOS that works better
+function openCalendarForIOS(link) {
+  // On iOS, we need to use a different approach
+  // First, try to open the Google Calendar app
+  window.location = 'googlecalendar://';
+  
+  // If that doesn't work (app not installed), open web version
+  setTimeout(() => {
+    // Check if we're still on the same page
+    if (!document.hidden) {
+      // Open the specific Google Calendar link
+      window.open(link, '_blank');
+    }
+  }, 800);
 }
 
 // Add click handlers to all calendar buttons
@@ -86,7 +141,15 @@ function setupCalendarButtons() {
   document.querySelectorAll('.calendar-btn').forEach(button => {
     button.addEventListener('click', () => {
       const link = button.getAttribute('data-link');
-      openCalendarSmart(link);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      
+      if (isIOS) {
+        // For iOS users
+        openCalendarForIOS(link);
+      } else {
+        // For Android/Desktop users
+        window.open(link, '_blank');
+      }
     });
   });
 }
