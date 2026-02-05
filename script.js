@@ -39,10 +39,60 @@ langToggle.addEventListener("click", () => {
   langToggle.textContent = texts[currentLang].langBtn;
 });
 
-// Calendar button redirect
-document.querySelectorAll('.calendar-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const link = button.getAttribute('data-link');
+// Detect iOS and show notice
+function detectIOS() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const iosNotice = document.getElementById('iosNotice');
+  
+  if (isIOS && iosNotice) {
+    iosNotice.style.display = 'block';
+  }
+}
+
+// Smart calendar opener for iOS/Android
+function openCalendarSmart(link) {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  
+  if (isIOS) {
+    // iOS: Try to open Google Calendar app first
+    const googleCalendarScheme = 'googlecalendar://';
+    const appleCalendarScheme = 'calshow://';
+    
+    // Try Google Calendar app first
+    window.location = googleCalendarScheme;
+    
+    // Fallback timers
+    setTimeout(() => {
+      // If still on page after 300ms, try Apple Calendar
+      if (!document.hidden) {
+        window.location = appleCalendarScheme;
+      }
+    }, 300);
+    
+    setTimeout(() => {
+      // If still on page after 800ms, open web calendar
+      if (!document.hidden) {
+        window.open(link, '_blank');
+      }
+    }, 800);
+  } else {
+    // Android/Desktop: Direct link (will open Google Calendar app if installed)
     window.open(link, '_blank');
+  }
+}
+
+// Add click handlers to all calendar buttons
+function setupCalendarButtons() {
+  document.querySelectorAll('.calendar-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const link = button.getAttribute('data-link');
+      openCalendarSmart(link);
+    });
   });
+}
+
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  detectIOS();
+  setupCalendarButtons();
 });

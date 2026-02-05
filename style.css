@@ -71,12 +71,36 @@ h1 {
 
 .subtitle {
   color: #666;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 0.95rem;
 }
 
 body.dark .subtitle {
   color: #9ca3af;
+}
+
+.ios-notice {
+  background: rgba(79, 70, 229, 0.1);
+  border-left: 4px solid #4f46e5;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+body.dark .ios-notice {
+  background: rgba(79, 70, 229, 0.15);
+  border-left-color: #6366f1;
+}
+
+.ios-notice p {
+  margin: 0;
+  color: #4f46e5;
+}
+
+body.dark .ios-notice p {
+  color: #a5b4fc;
 }
 
 .calendar-section {
@@ -121,7 +145,6 @@ body.dark .calendar-section h2 {
   box-shadow: 0 12px 25px rgba(79, 70, 229, 0.35);
 }
 
-/* Adjust button colors for dark mode */
 body.dark .calendar-btn {
   background: linear-gradient(135deg, #3730a3, #5b21b6);
 }
@@ -157,6 +180,11 @@ body.dark .calendar-btn {
   .calendar-btn {
     padding: 0.8rem;
     font-size: 0.85rem;
+  }
+  
+  .ios-notice {
+    font-size: 0.8rem;
+    padding: 0.6rem;
   }
 }
 
